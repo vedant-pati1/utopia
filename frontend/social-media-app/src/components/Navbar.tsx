@@ -24,7 +24,7 @@ const Navbar = () => {
           />
         </div>
         <div>
-          <Link href="/profile" className="text-blue-500 hover:underline">
+          <Link href="/login" className="text-blue-500 hover:underline">
             <Image
               src={"/profile.png"}
               alt="User Avatar"

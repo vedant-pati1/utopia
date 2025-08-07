@@ -8,9 +8,13 @@ import Link from "next/link";
 import Image from "next/image";
 
 export default function Home() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+
+  if (status === "loading") {
+    return <div>Loading...</div>;
+  }
   if (!session) {
-    redirect("/profile");
+    redirect("/login");
   }
   return (
     <div>
@@ -50,7 +54,7 @@ export default function Home() {
                   />
                   <p className="ml-2">User Name</p>
                 </div>
-                <Link href="/profile" className="text-blue-500">
+                <Link href="/login" className="text-blue-500">
                   Follow
                 </Link>
               </div>
@@ -65,7 +69,7 @@ export default function Home() {
                   />
                   <p className="ml-2">User Name</p>
                 </div>
-                <Link href="/profile" className="text-blue-500">
+                <Link href="/login" className="text-blue-500">
                   Follow
                 </Link>
               </div>
