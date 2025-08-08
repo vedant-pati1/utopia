@@ -14,19 +14,18 @@ export default function Profile() {
   } else {
     return (
       <div className="flex flex-col items-center justify-center h-screen">
-
-      <form
-        action={async () => {
-          await signIn("google");
-        }}
-      >
-        <button
-          type="submit"
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        <form
+          action={async () => {
+            await signIn("google");
+          }}
         >
-          Sign in with Google
-        </button>
-      </form>
+          <button
+            type="submit"
+            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+          >
+            Sign in with Google
+          </button>
+        </form>
       </div>
     );
   }
