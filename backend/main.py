@@ -16,19 +16,18 @@ app.add_middleware(
 )
 
 
-# @app.post("/api/upload")
-# async def upload_endpoint(file: Annotated[UploadFile, File()]):
-#     if not file.content_type.startswith("image/"):
-#         HTTPException(status_code=400, detail="only images are allowed to be uploaded")
-#     image  = await file.read()
+@app.post("/api/upload")
+async def upload_endpoint(file: Annotated[UploadFile, File()]):
+    if not file.content_type.startswith("image/"):
+        HTTPException(status_code=400, detail="only images are allowed to be uploaded")
+    image = await file.read()
 
-#     with Session(engine) as session:
-#         Post(
-#             user_id = 
-#         )
-    
-#     return {
-#         "message": "Upload successful",
-#         "filename": file.filename,
-#         "content_type": file.content_type,
-#     }
+    with Session(engine) as session:
+        new_post = Post(user_id=1, content="Uploaded image", image=image)
+        session.add(new_post)
+        session.commit()
+    return {
+        "message": "Upload successful",
+        "filename": file.filename,
+        "content_type": file.content_type,
+    }

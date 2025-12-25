@@ -28,9 +28,8 @@ class User(Base):
     email = Column(String(100), nullable=False, unique=True)
     image = Column(URL(), nullable=True)
 
-    posts = relationship("Post",
-                         primaryjoin="User.id == Post.user_id"
-                         )
+    posts = relationship("Post", primaryjoin="User.id == Post.user_id")
+
 
 followers = relationship(
     "User",
@@ -40,22 +39,27 @@ followers = relationship(
     back_populates="following",
 )
 
+
 class FollowAssociation(Base):
     __tablename__ = "followAssociation"
 
     user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
-    #follower follows user
+    # follower follows user
     follower_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
     followed_at = Column(TIMESTAMP, server_default=func.now())
+
 
 class Post(Base):
     __tablename__ = "posts"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False) # one to one relationship with user 
+    user_id = Column(
+        Integer, ForeignKey("users.id"), nullable=False
+    )  # one to one relationship with user
     content = Column(String(500), nullable=False)
     image = Column(BLOB, nullable=True)
-    created_at = Column(String(50), nullable=False)
+    created_at = Column(TIMESTAMP, server_default=func.now())
+
 
 class Messages(Base):
     # add archiving mechanism later
