@@ -1,6 +1,7 @@
 datasource db {
   provider = "postgresql"
   url      = env("AUTH_DATABASE_URL")
+  schemas = ["auth", "utopia"]
 }
  
 generator client {
@@ -20,6 +21,7 @@ model User {
  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  @@schema("auth")
 }
  
 model Account {
@@ -41,6 +43,7 @@ model Account {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
  
   @@id([provider, providerAccountId])
+  @@schema("auth")
 }
  
 model Session {
@@ -51,6 +54,7 @@ model Session {
  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  @@schema("auth")
 }
  
 model VerificationToken {
@@ -59,6 +63,7 @@ model VerificationToken {
   expires    DateTime
  
   @@id([identifier, token])
+  @@schema("auth")
 }
  
 // Optional for WebAuthn support
@@ -75,4 +80,56 @@ model Authenticator {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
  
   @@id([userId, credentialID])
+  @@schema("auth")
+}
+
+model UtopiaUser {
+  id            Int          @id @default(autoincrement())
+  name          String?
+  username     String?    @unique @db.VarChar(50)
+  auth_user_id   String    @unique @db.VarChar(50)
+  email         String          @unique
+  image         String?
+
+  followers    FollowAssociation[] @relation("UserFollowers")
+  following    FollowAssociation[] @relation("UserFollowing")
+
+  @@map("users")
+  @@schema("utopia")
+}
+
+
+model FollowAssociation {
+  user_id     Int
+  follower_id Int
+  followedAt DateTime @default(now())
+
+  user       UtopiaUser @relation("UserFollowers", fields: [user_id], references: [id], onDelete: Cascade)
+  follower   UtopiaUser @relation("UserFollowing", fields: [follower_id], references: [id], onDelete: Cascade)
+
+  @@id([user_id, follower_id])
+  @@map("follows")
+  @@schema("utopia")
+}
+
+
+model Post {
+  id        Int      @id @default(autoincrement())
+  user_id    Int
+  content   String   @db.VarChar(500)
+  image     Bytes?
+  created_at String   @db.VarChar(50)
+
+  @@map("posts")
+  @@schema("utopia")
+}
+
+model Message {
+  message_id Int      @id @default(autoincrement())
+  user_id    Int
+  created_at DateTime @default(now())
+  content   String   @db.Text
+
+  @@map("messages")
+  @@schema("utopia")
 }

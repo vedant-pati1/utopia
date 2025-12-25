@@ -12,7 +12,7 @@ export default function () {
   }
 
   if (!session) {
-    redirect("/profile");
+    redirect("/");
   }
   return (
     <div className="flex h-screen">

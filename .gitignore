@@ -44,3 +44,6 @@ next-env.d.ts
 venv
 .ruff_cache
 __pycache__
+.vscode/
+init-dev.sh
+run-dev.sh

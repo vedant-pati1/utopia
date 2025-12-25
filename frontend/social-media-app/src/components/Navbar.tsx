@@ -12,7 +12,7 @@ const Navbar = () => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
 
-    fetch("/api/upload", {
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/upload`, {
       method: "POST",
       body: formData,
     })
@@ -23,6 +23,7 @@ const Navbar = () => {
       })
       .catch((error) => {
         console.error("Error:", error);
+        alert("Failed to upload");
       });
   }
 

@@ -11,7 +11,7 @@ from sqlalchemy import (
     func,
     TIMESTAMP,
     Text,
-    create_engine
+    create_engine,
 )
 from sqlalchemy.orm import declarative_base, DeclarativeBase, relationship
 
@@ -22,42 +22,40 @@ class User(Base):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(100), nullable=True)
     username = Column(String(50), nullable=False, unique=True)
     auth_user_id = Column(String(50), nullable=False, unique=True)
     email = Column(String(100), nullable=False, unique=True)
     image = Column(URL(), nullable=True)
-    followers = Column(Integer, default=0)
-    following = Column(Integer, default=0)
 
-    posts = relationship("Post", back_populates="users")
-    messages = relationship("Messages", back_populates="users")
+    posts = relationship("Post",
+                         primaryjoin="User.id == Post.user_id"
+                         )
 
-    # add followers and following relationship
+followers = relationship(
+    "User",
+    secondary="followAssociation",
+    primaryjoin="User.id == FollowAssociation.user_id",
+    secondaryjoin="User.id == FollowAssociation.follower_id",
+    back_populates="following",
+)
 
+class FollowAssociation(Base):
+    __tablename__ = "followAssociation"
+
+    user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
+    #follower follows user
+    follower_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
+    followed_at = Column(TIMESTAMP, server_default=func.now())
 
 class Post(Base):
     __tablename__ = "posts"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False) # one to one relationship with user 
     content = Column(String(500), nullable=False)
     image = Column(BLOB, nullable=True)
     created_at = Column(String(50), nullable=False)
-
-    user = relationship("User", back_populates="posts")
-
-
-class Follows(Base):
-    __tablename__ = "follows"
-
-    follower_id = Column(
-        BigInteger, ForeignKey("users.id", ondelete="CASCADE"), primary_key=True
-    )
-    following_id = Column(
-        BigInteger, ForeignKey("users.id", ondelete="CASCADE"), primary_key=True
-    )
-    followed_at = Column(TIMESTAMP, server_default=func.now())
-
 
 class Messages(Base):
     # add archiving mechanism later
