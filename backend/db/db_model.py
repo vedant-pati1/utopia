@@ -5,9 +5,8 @@ from sqlalchemy import (
     Integer,
     String,
     ForeignKey,
-    URL,
     BLOB,
-    BigInteger,
+    LargeBinary,
     func,
     TIMESTAMP,
     Text,
@@ -26,7 +25,7 @@ class User(Base):
     username = Column(String(50), nullable=False, unique=True)
     auth_user_id = Column(String(50), nullable=False, unique=True)
     email = Column(String(100), nullable=False, unique=True)
-    image = Column(URL(), nullable=True)
+    profile_image = Column(String(), nullable=True)
 
     posts = relationship("Post", primaryjoin="User.id == Post.user_id")
 
@@ -57,7 +56,7 @@ class Post(Base):
         Integer, ForeignKey("users.id"), nullable=False
     )  # one to one relationship with user
     content = Column(String(500), nullable=False)
-    image = Column(BLOB, nullable=True)
+    image = Column(LargeBinary, nullable=True)
     created_at = Column(TIMESTAMP, server_default=func.now())
 
 

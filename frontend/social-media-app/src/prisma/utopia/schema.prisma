@@ -1,0 +1,29 @@
+generator utopia_client {
+  provider = "prisma-client-js"
+  output   = "./utopia"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("UTOPIA_DATABASE_URL")
+}
+
+model Post {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  content   String   @db.VarChar(500)
+  imageUrl  String?
+  createdAt DateTime @default(now())
+
+  @@map("posts")
+}
+
+model Message {
+  id         Int      @id @default(autoincrement())
+  senderId   String
+  receiverId String
+  content    String   @db.Text
+  createdAt  DateTime @default(now())
+
+  @@map("messages")
+}

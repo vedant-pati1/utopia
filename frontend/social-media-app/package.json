@@ -7,7 +7,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "prisma:generate:auth" : "bunx prisma generate --schema src/prisma/auth.prisma",
+    "prisma:generate:utopia" : "bunx prisma generate --schema src/prisma/utopia.prisma",
+    "prisma:migrate:auth" : "bunx prisma migrate dev --schema src/prisma/auth.prisma",
+    "prisma:migrate:utopia" : "bunx prisma migrate dev --schema src/prisma/utopia.prisma"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.10.0",
