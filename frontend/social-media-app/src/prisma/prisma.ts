@@ -1,12 +1,18 @@
-import { PrismaClient } from "@prisma/client/";
+import { PrismaClient as PrismaAuthClient } from "../../prisma/auth";
+import { PrismaClient as PrismaUtopiaClient } from "../../prisma/utopia";
 
 const globalForPrisma = global as unknown as {
-  prisma: PrismaClient;
+  authPrisma: PrismaAuthClient;
+  utopiaPrimsa: PrismaUtopiaClient;
 };
 
-const prisma = globalForPrisma.prisma || new PrismaClient();
+const authPrisma = globalForPrisma.authPrisma || new PrismaAuthClient();
+const utopiaPrisma = globalForPrisma.utopiaPrimsa || new PrismaUtopiaClient();
 
-if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
+if (process.env.NODE_ENV !== "production") {
+  globalForPrisma.authPrisma = authPrisma;
+  globalForPrisma.utopiaPrimsa = utopiaPrisma;
+}
 
-export default prisma;
-
+export { authPrisma };
+export { utopiaPrisma };
